@@ -1,25 +1,4 @@
-#FROM python:3.9-slim-buster
-
-#RUN useradd -m appuser
-
-#USER root
-
-#WORKDIR /app
-
-#COPY requirements.txt .
-
-#RUN pip install --no-cache-dir -r requirements.txt
-
-#COPY . .
-
-#EXPOSE 8000
-
-#USER appuser
-
-#CMD ["python", "manage.py", "runserver", "0.0.0.0:8000"]
-
 # hadolint global ignore DL3008
-
 FROM debian:12-slim AS build 
 
 # hadolint ignore DL3008
@@ -35,14 +14,12 @@ FROM build AS build-venv
 COPY requirements.txt /requirements.txt
 RUN /venv/bin/pip install --disable-pip-version-check -r /requirements.txt
 
-
 FROM gcr.io/distroless/python3-debian12:latest-amd64
 COPY --from=build-venv /venv /venv
 
 WORKDIR /app
 
 COPY . .
-
 
 EXPOSE 8080
 
