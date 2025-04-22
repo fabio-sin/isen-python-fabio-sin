@@ -23,3 +23,12 @@ jobs:
     - name: Push the Docker image
       run: |
         docker push fabiosin/isen-python-fabio-sin:dev-${{ github.sha }}
+        
+    - name: Vulnerability scanning with Trivy
+      uses: aquasecurity/trivy-action@master
+      with:
+        image-ref: fabiosin/isen-python-fabio-sin:dev-${{ github.sha }}
+        severity: HIGH,CRITICAL
+        format: table
+        exit-code: 0
+        ignore-unfixed: true
