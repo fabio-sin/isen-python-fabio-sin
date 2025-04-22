@@ -1,6 +1,6 @@
-name: Pylint
+name: Lint Python and Dockerfile
 
-on: [push]
+on: [push, pull_request]
 
 jobs:
   build:
@@ -22,3 +22,7 @@ jobs:
     - name: Analysing the code with pylint
       run: |
         pylint $(git ls-files '*.py') --disable=C,R0801 --fail-under=7
+    - name: Lint Dockerfile with Hadolint
+      uses: hadolint/hadolint-action@v3.1.0
+      with:
+        dockerfile: Dockerfile
