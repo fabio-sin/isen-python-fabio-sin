@@ -29,3 +29,6 @@ jobs:
       uses: hadolint/hadolint-action@v3.1.0
       with:
         dockerfile: Dockerfile
+    - name: Run Bandit (SAST)
+      run: |
+        bandit -r . --skip B101 -x unit_tests,integration_tests
