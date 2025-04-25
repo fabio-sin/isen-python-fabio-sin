@@ -37,10 +37,10 @@ jobs:
   cypress:
     runs-on: ubuntu-latest
     needs: docker
-    if: github.ref == 'refs/heads/main'  # ✅ n’exécute que sur la branche main
+    if: github.ref == 'refs/heads/main'
 
     container:
-      image: cypress/included:13.1.0  # ou une autre version compatible avec ton projet
+      image: cypress/included:13.1.0
 
     services:
       web:
