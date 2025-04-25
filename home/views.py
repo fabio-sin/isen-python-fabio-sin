@@ -10,12 +10,20 @@ def RedirectHomeView(request):
     '''
     return redirect('home')
 
+
 class HomeView(ListView):
     '''
-    Renders home page with all the products
+    Renders home page with all the products.
     '''
     template_name = 'home.html'
     model = Product
 
-    def get(self, request):
-        return super().get(request)
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        min_price = self.request.GET.get('min_price')
+        max_price = self.request.GET.get('max_price')
+        if min_price:
+            queryset = queryset.filter(price__gte=min_price)
+        if max_price:
+            queryset = queryset.filter(price__lte=max_price)
+        return queryset

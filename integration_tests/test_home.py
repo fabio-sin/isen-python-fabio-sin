@@ -13,7 +13,6 @@ CLIENT = Client()
 
 @pytest.mark.django_db
 def test_slash_route():
-
     """ 
     Our test approach starts with testing the 'redirect_home' route, whether it maps to 'RedirectHomeView'
     or not, then we test if RedirectHomeView redirected to '/home/' route. 
@@ -41,10 +40,8 @@ def test_slash_route():
     assert HomeView.model == Product
 
 
-
 @pytest.mark.django_db
 def test_home_route():
-
     """
     For this test approach, we are simply testing if 'home' route maps to 'HomeView', 
     and the 'HomeView' renders the correct template 'home.html' and with the correct model (Product)
