@@ -1,28 +1,40 @@
 describe('Create and connect to an account', () => {
-  it('Visits the Oc commerce site', () => {
+  it('Visits the OC commerce site and creates a new account', () => {
     cy.visit('/home')
 
-    // User is able to create an account an to be redirect to login pages
+    // Generate a random username and email
+    const randomId = Math.random().toString(36).substring(2, 8)
+    const username = `user_${randomId}`
+    const email = `${username}@test.com`
+    const password = '1hstesh<23456789'
 
+    // Go to signup page
     cy.contains('SIGNUP').click()
     cy.url().should('include', '/user/signup')
-    // cy.contains('fname')
-    cy.get('[id^=fname]').type('fakeuser')
-    cy.get('[id^=lname]').type('toto')
-    cy.get('[id^=username]').type('fakeuser')
-    cy.get('[id^=email]').type('fake@email.com')
-    cy.get('[id^=pass]').type('1hstesh<23456789')
-    cy.get('[id^=re_pass]').type('1hstesh<23456789')
+
+    // Fill the signup form with random credentials
+    cy.get('[id^=fname]').type('John')
+    cy.get('[id^=lname]').type('Doe')
+    cy.get('[id^=username]').type(username)
+    cy.get('[id^=email]').type(email)
+    cy.get('[id^=pass]').type(password)
+    cy.get('[id^=re_pass]').type(password)
     cy.get('form').contains('Register').click()
+
+    // Expect redirection to login page
     cy.url().should('include', '/user/login')
 
-    // User is able to connect with the previously created account
-    cy.get('[id^=your_name]').type('fakeuser')
-    cy.get('[id^=your_pass]').type('1hstesh<23456789')
+    // Log in with the newly created account
+    cy.get('[id^=your_name]').type(username)
+    cy.get('[id^=your_pass]').type(password)
     cy.get('form').contains('Log in').click()
+
+    // Confirm login success
     cy.url().should('include', '/home')
+    cy.contains('FAVOURITE')
   })
 })
+
 
 
 
