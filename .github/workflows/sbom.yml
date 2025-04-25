@@ -3,8 +3,8 @@ name: Generate SBOM
 on:
     push:
       branches:
-        - main
         - feature/ci-pipeline
+        - main
  
 jobs:
   generate-sbom:
@@ -21,14 +21,23 @@ jobs:
       - name: Generate SBOM (syft-json format)
         run: |
           syft dir:. -o syft-json > sbom.syft.json
+ 
+      - name: Upload SBOM as Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: sbom-json
+          path: sbom.syft.json
 
   scan-sbom:
     runs-on: ubuntu-latest
     needs: generate-sbom
 
     steps:
-      - name: Checkout repo
-        uses: actions/checkout@v4
+      - name: Download SBOM artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: sbom-json
+          path: sbom
 
       - name: Install Grype
         run: |
@@ -36,7 +45,7 @@ jobs:
 
       - name: Scan SBOM with Grype
         run: |
-          grype file:sbom.syft.json -o table > grype-report.txt
+          grype sbom/sbom.syft.json -o table > grype-report.txt
 
       - name: Upload Grype scan report
         uses: actions/upload-artifact@v4
