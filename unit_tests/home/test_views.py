@@ -33,6 +33,8 @@ def test_HomeView():
     assert response.status_code == 200
     assertTemplateUsed(response, 'home.html')
 
+# Tests unitaires pour la feature min/max price
+
 
 @pytest.mark.django_db
 def test_price_filter_min_price():
