@@ -1,0 +1,43 @@
+name: Cypress E2E tests
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  cypress-run:
+    runs-on: ubuntu-latest
+
+    services:
+      web:
+        image: fabiosin/isen-python-fabio-sin:distroless-dev-${{ github.sha }}
+        ports:
+          - 8080:8080
+        options: >-
+          --health-cmd="curl --fail http://localhost:8080 || exit 1"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=5
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+
+      - name: Install Cypress dependencies
+        run: |
+          npm ci
+
+      - name: Run Cypress tests
+        uses: cypress-io/github-action@v6
+        with:
+          start: echo "App already running in Docker"
+          wait-on: 'http://localhost:8080'
+          wait-on-timeout: 60
+        env:
+          CYPRESS_baseUrl: http://localhost:8080
