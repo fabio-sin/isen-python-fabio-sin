@@ -1,4 +1,4 @@
-name: Deploy to Cloud Run
+name: Build and Deploy to Cloud Run
 
 on:
   push:
@@ -6,7 +6,7 @@ on:
       - main
 
 jobs:
-  deploy:
+  build-and-deploy:
     runs-on: ubuntu-latest
 
     steps:
@@ -22,8 +22,17 @@ jobs:
       run: |
         gcloud auth configure-docker europe-west1-docker.pkg.dev --quiet
 
+    - name: Build Docker image
+      run: |
+        docker build -t europe-west1-docker.pkg.dev/contract-central-c710c/cicd-class/isen-python:latest .
+
+    - name: Push Docker image to Artifact Registry
+      run: |
+        docker push europe-west1-docker.pkg.dev/contract-central-c710c/cicd-class/isen-python:latest
+
     - name: Deploy to Cloud Run
       uses: google-github-actions/deploy-cloudrun@v2
       with:
         service: isen-python-service
         image: europe-west1-docker.pkg.dev/contract-central-c710c/cicd-class/isen-python:latest
+        region: europe-west1
