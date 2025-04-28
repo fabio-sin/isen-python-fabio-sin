@@ -8,7 +8,7 @@ on:
 jobs:
   dast-scan:
     runs-on: ubuntu-latest
-    continue-on-error: true   # Autoriser l'échec sans bloquer la CI/CD
+    continue-on-error: true
 
     steps:
       - name: Checkout code
@@ -18,7 +18,7 @@ jobs:
         run: |
           docker build -t isen-python-app .
           docker run -d -p 8080:8080 --name isen-python-app isen-python-app
-          sleep 15  # attendre que Django soit lancé
+          sleep 15
 
       - name: Run ZAP Baseline Scan
         uses: zaproxy/action-baseline@v0.14.0
@@ -35,4 +35,5 @@ jobs:
       - name: Stop and remove docker container
         if: always()
         run: |
-          docker stop is
+          docker stop isen-python-app || true
+          docker rm isen-python-app || true
