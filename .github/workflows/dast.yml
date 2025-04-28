@@ -37,5 +37,5 @@ jobs:
       - name: Stop and remove docker container
         if: always()
         run: |
-          docker stop my-app
-          docker rm my-app
+          docker stop isen-python-fabio-sin
+          docker rm isen-python-fabio-sin
